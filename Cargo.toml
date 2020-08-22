@@ -1,0 +1,22 @@
+[package]
+name = "rsocket-rust-demo"
+version = "0.1.0"
+authors = ["linux_china <libing.chen@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "0.2.22", features = ["full"] }
+rsocket_rust = "0.5.3"
+rsocket_rust_transport_tcp = "0.5.3"
+log = "0.4.11"
+env_logger = "0.7.1"
+
+[[bin]]
+name = "server"
+path = "src/server.rs"
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
