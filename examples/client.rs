@@ -3,7 +3,7 @@ use rsocket_rust_transport_tcp::TcpClientTransport;
 
 #[tokio::main]
 async fn main() {
-    let cli = RSocketFactory::connect()
+    let client = RSocketFactory::connect()
         .acceptor(Box::new(|| Box::new(EchoRSocket)))
         .transport(TcpClientTransport::from("127.0.0.1:7878"))
         .setup(Payload::from("READY!"))
@@ -15,7 +15,7 @@ async fn main() {
         .set_data_utf8("Hello World!")
         .set_metadata_utf8("Rust")
         .build();
-    let res = cli.request_response(req).await.unwrap();
+    let res = client.request_response(req).await.unwrap();
     println!("got: {:?}", res);
-    cli.close();
+    client.close();
 }

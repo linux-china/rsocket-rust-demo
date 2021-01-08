@@ -7,11 +7,10 @@ use std::env;
 use std::error::Error;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-    env_logger::from_env(Env::default().default_filter_or("info")).init();
+async fn main() -> anyhow::Result<()> {
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
     let addr = env::args().nth(1).unwrap_or("127.0.0.1:7878".to_string());
-    info!("start server");
     RSocketFactory::receive()
         .transport(TcpServerTransport::from(addr))
         .acceptor(Box::new(|setup, _socket| {
