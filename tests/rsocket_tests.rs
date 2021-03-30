@@ -3,7 +3,7 @@ use rsocket_rust_transport_tcp::TcpClientTransport;
 use rsocket_rust::utils::EchoRSocket;
 
 #[tokio::test]
-async fn test_demo() {
+async fn test_request_response() {
     let client = RSocketFactory::connect()
         .transport(TcpClientTransport::from("127.0.0.1:7878"))
         .setup(Payload::from("READY!"))
