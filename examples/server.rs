@@ -1,28 +1,31 @@
 use log::{info};
 use env_logger::Env;
+use rsocket_rust::{Result};
 
 use rsocket_rust::prelude::*;
 use rsocket_rust_transport_tcp::TcpServerTransport;
 use std::env;
-use std::error::Error;
-use anyhow::Result;
+use async_trait::async_trait;
 
 struct RSocketHandler {
-    rsocket: Box<dyn RSocket>
+    pub rsocket: Box<dyn RSocket>
 }
 
+#[async_trait]
 impl RSocket for RSocketHandler {
-    fn metadata_push(&self, _req: Payload) -> Mono<()> {
-        Box::pin(async {})
-    }
-    fn fire_and_forget(&self, req: Payload) -> Mono<()> {
-        info!("{:?}", req);
-        Box::pin(async {})
+    async fn metadata_push(&self, _req: Payload) -> Result<()> {
+        Ok(())
     }
 
-    fn request_response(&self, req: Payload) -> Mono<Result<Payload>> {
+    async fn fire_and_forget(&self, req: Payload) -> Result<()> {
         info!("{:?}", req);
-        Box::pin(async move { Ok(req) })
+        Ok(())
+    }
+
+    async fn request_response(&self, req: Payload) -> Result<Option<Payload>> {
+        info!("{:?}", req);
+        let payload = Payload::builder().set_data_utf8("Hello").build();
+        Ok(Some(payload))
     }
 
     fn request_stream(&self, _req: Payload) -> Flux<Result<Payload>> {
