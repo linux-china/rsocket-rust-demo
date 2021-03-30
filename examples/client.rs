@@ -1,9 +1,11 @@
 use rsocket_rust::prelude::*;
 use rsocket_rust_transport_tcp::TcpClientTransport;
+use rsocket_rust::utils::EchoRSocket;
+use rsocket_rust::Client;
 
 #[tokio::main]
 async fn main() {
-    let client = RSocketFactory::connect()
+    let mut client = RSocketFactory::connect()
         .acceptor(Box::new(|| Box::new(EchoRSocket)))
         .transport(TcpClientTransport::from("127.0.0.1:7878"))
         .setup(Payload::from("READY!"))
@@ -17,5 +19,6 @@ async fn main() {
         .build();
     let res = client.request_response(req).await.unwrap();
     println!("got: {:?}", res);
-    client.close();
+    // If you want to block until socket disconnected.
+    client.wait_for_close().await;
 }
